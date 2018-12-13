@@ -9,7 +9,7 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file(".")).
   settings(
     commonSettings,
-    name := "test-kafka-consumer",
+    name := "test-kafka-producer",
 
     libraryDependencies ++= Seq(
       // kafka

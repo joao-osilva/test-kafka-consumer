@@ -20,16 +20,19 @@ object Runner {
     val streamingInterval = Conf.getLong("conf.spark.streaming.interval")
     val streamCtx = new StreamingContext(sparkConf, Seconds(streamingInterval))
 
-    val topics = Set(Conf.getString("conf.kafka.topic"))
-    val stream = KafkaService.getStream(streamCtx, topics)
+    val consumeTopics = Conf.getString("conf.kafka.consumer.topic").split(";").toSet
+    val stream = KafkaService.getStream(streamCtx, consumeTopics)
+
+    val produce1Topic = Conf.getString("conf.kafka.producer_1.topic")
 
     stream.map(element => element._2)
       .foreachRDD(rdd => rdd.collect()
         .foreach(record =>
           try {
-            Log.info(s"[RECORD]-> ${record}")
-            println(s"[RECORD]-> ${record}")
+            Log.info(s"[INPUT RECORD]-> ${record}")
+            println(s"[INPUT RECORD]-> ${record}")
 
+            KafkaService.sendToTopic(produce1Topic, record)
           } catch {
             case ex: Exception =>
               Log.error("[ERROR] " + record)
