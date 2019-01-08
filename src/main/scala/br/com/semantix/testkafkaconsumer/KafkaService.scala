@@ -17,14 +17,14 @@ object KafkaService {
 
   val consumerParams = Map[String, String](ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> Conf.getString("conf.kafka.brokers"),
                                            ConsumerConfig.GROUP_ID_CONFIG -> Conf.getString("conf.kafka.consumer.group"),
-                                           ConsumerConfig.AUTO_OFFSET_RESET_CONFIG -> Conf.getString("conf.kafka.consumer.offset"),
-                                           "security.protocol" -> Conf.getString("conf.kafka.security_protocol"))
+                                           ConsumerConfig.AUTO_OFFSET_RESET_CONFIG -> Conf.getString("conf.kafka.consumer.offset"))/*,
+                                           "security.protocol" -> Conf.getString("conf.kafka.security_protocol"))*/
 
   val producerParams = new HashMap[String, Object]
   producerParams.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, Conf.getString("conf.kafka.brokers"))
   producerParams.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
   producerParams.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer")
-  producerParams.put("security.protocol", Conf.getString("conf.kafka.security_protocol"))
+  //producerParams.put("security.protocol", Conf.getString("conf.kafka.security_protocol"))
 
   val producer = new KafkaProducer[String, String](producerParams)
 
@@ -36,6 +36,8 @@ object KafkaService {
     val record = new ProducerRecord[String, String](topic, value)
     Log.info(s"[OUTPUT RECORD]-> ${record}")
     println(s"[OUTPUT RECORD]-> ${record}")
-    producer.send(record)
+    val result = producer.send(record)
+    Log.info(s"[RESULT]-> ${result}")
+    println(s"[RESULT]-> ${result}")
   }
 }

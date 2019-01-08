@@ -9,16 +9,26 @@ lazy val commonSettings = Seq(
 lazy val root = (project in file(".")).
   settings(
     commonSettings,
-    name := "test-kafka-producer",
+    name := "test-kafka-consumer",
 
     libraryDependencies ++= Seq(
       // kafka
       "org.apache.spark" %% "spark-core" % "1.6.1" % "provided",
+      "org.apache.spark" %% "spark-sql" % "1.6.1" % "provided",
       "org.apache.spark" %% "spark-streaming" % "1.6.1" % "provided",
       "org.apache.spark" %% "spark-streaming-kafka" % "1.6.1.2.4.2.0-258",
 
+      // ibm mq
+      "com.ibm.mq" % "com.ibm.mq.allclient" % "9.0.4.0",
+
+      // json
+      "org.json4s" %% "json4s-native" % "3.6.0",
+
       // config
-      "com.typesafe" % "config" % "1.2.1"
+      "com.typesafe" % "config" % "1.2.1",
+
+      //solr
+      "com.lucidworks.spark" % "spark-solr" % "2.0.4"
     ),
 
     // append several options to the list of options passed to the Java compiler
@@ -28,6 +38,7 @@ lazy val root = (project in file(".")).
 
     resolvers ++= Seq(
       "Hortonworks Repository" at "http://repo.hortonworks.com/content/repositories//releases/",
+      "Restlet Repository" at "http://maven.restlet.org/",
       Resolver.sonatypeRepo("public")
     ),
 
