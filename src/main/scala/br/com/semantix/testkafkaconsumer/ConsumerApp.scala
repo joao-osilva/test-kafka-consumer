@@ -3,8 +3,11 @@ package br.com.semantix.testkafkaconsumer
 import java.util.Calendar
 import java.util.Formatter.DateTime
 
+import com.lucidworks.spark.rdd.SolrRDD
+import com.lucidworks.spark.util.SolrSupport
 import com.typesafe.config.{Config, ConfigFactory, ConfigRenderOptions}
 import org.apache.log4j.LogManager
+import org.apache.solr.common.SolrInputDocument
 import org.apache.spark.{SparkConf, SparkContext}
 import org.apache.spark.storage.StorageLevel
 import org.apache.spark.streaming.{Seconds, StreamingContext}
@@ -32,7 +35,7 @@ object Runner {
     val sqlCtx = new SQLContext(streamCtx.sparkContext)
 
     val consumeTopics = Conf.getString("conf.kafka.consumer.topic").split(";").toSet
-    val stream = KafkaService.getStream(streamCtx, consumeTopics)
+    //val stream = KafkaService.getStream(streamCtx, consumeTopics)
 
     val produce1Topic = Conf.getString("conf.kafka.producer_1.topic")
 
@@ -76,6 +79,11 @@ object Runner {
             Log.error(s"An error occurred while processing a record", ex)
         }
     )*/
+
+    // read data from solr
+    /*val docs = SolrService.getDocuments(sqlCtx, Conf.getString("conf.solr.collection"), "*:*")
+    println(docs)*/
+
 
     streamCtx.start()
     streamCtx.awaitTermination()
